@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eye Disease Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 50%;
+            margin: 5% auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        input, textarea {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        button {
+            padding: 10px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .output {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Eye Disease Prediction</h2>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <label for="patientName">Patient Name:</label>
+            <input type="text" id="patientName" name="patientName" placeholder="Enter patient name" required>
+            
+            <label for="patientDetails">Patient Details:</label>
+            <textarea id="patientDetails" name="patientDetails" placeholder="Enter patient details" required></textarea>
+            
+            <label for="image">Upload Retina Image:</label>
+            <input type="file" id="image" name="image" accept="image/*" required>
+            
+            <button type="button" onclick="uploadData()">Predict Disease</button>
+        </form>
+        <div class="output" id="output"></div>
+    </div>
+
+    <script>
+        async function uploadData() {
+            const form = document.getElementById("uploadForm");
+            const formData = new FormData(form);
+            
+            const response = await fetch("http://127.0.0.1:5000/predict", {
+                method: "POST",
+                body: formData
+            });
+            
+            const result = await response.json();
+            document.getElementById("output").innerHTML = `
+                <h3>Prediction Result</h3>
+                <p><strong>Disease:</strong> ${result.disease}</p>
+                <p><strong>Confidence:</strong> ${result.confidence}%</p>
+            `;
+        }
+    </script>
+</body>
+</html>
